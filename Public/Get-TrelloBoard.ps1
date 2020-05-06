@@ -19,11 +19,14 @@ function Get-TrelloBoard {
 	}
 	process {
 		try {
-			$invApiParams = @{
-				QueryParameter = @{ }
-			}
 			if (-not $IncludeClosedBoards.IsPresent) {
+				$invApiParams = @{
+					QueryParameter = @{ }
+				}
 				$invApiParams.QueryParameter.filter = 'open'
+			} else {
+				$invApiParams = @{
+				}
 			}
 			
 			switch ($PSCmdlet.ParameterSetName) {
