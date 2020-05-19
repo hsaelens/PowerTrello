@@ -23,7 +23,7 @@ function Update-TrelloBoard {
 
 	$paramToTrelloFieldMap = @{
 		'Name'        = 'name'
-		'Description' = 'description'
+		'Description' = 'desc'
 	}
 	$PSBoundParameters.GetEnumerator().where({ $_.Key -ne 'Board' }).foreach({
 			$fieldName = $paramToTrelloFieldMap[$_.Key]
@@ -33,7 +33,7 @@ function Update-TrelloBoard {
 			} else {
 				$fieldValue = $_.Value
 			}
-			$invParams.Uri = '{0}/boards/{1}/{2}?value={3}&{4}' -f $script:baseUrl, $Board.id, $fieldName, $fieldValue, $trelloConfig.String
-			Invoke-RestMethod @invParams
+			$invParams.Uri = '{0}/boards/{1}?{2}={3}&{4}' -f $script:baseUrl, $Board.id, $fieldName, $fieldValue, $trelloConfig.String
+			$null = Invoke-RestMethod @invParams
 		})
 }

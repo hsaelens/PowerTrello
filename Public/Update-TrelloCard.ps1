@@ -31,7 +31,7 @@ function Update-TrelloCard {
 
 	$paramToTrelloFieldMap = @{
 		'Name'        = 'name'
-		'Description' = 'description'
+		'Description' = 'desc'
 		'Due'         = 'due'
 		'ListId'      = 'idList'
 	}
@@ -40,9 +40,14 @@ function Update-TrelloCard {
 			if ($_.Key -eq 'Due') {
 				$fieldValue = Get-Date -Date $_.Value -Format 'yyyy-MM-dd'
 			} else {
+			if ($_.Value.Length -gt 16384)
+			{
+			  $fieldValue = $_.Value[0..16381] + "..."
+			} else {
 				$fieldValue = $_.Value
 			}
-			$invParams.Uri = '{0}/cards/{1}/{2}?value={3}&{4}' -f $script:baseUrl, $Card.id, $fieldName, $fieldValue, $trelloConfig.String
-			Invoke-RestMethod @invParams
+			}
+			$invParams.Uri = '{0}/cards/{1}?{2}={3}&{4}' -f $script:baseUrl, $Card.id, $fieldName, $fieldValue, $trelloConfig.String
+			$null = Invoke-RestMethod @invParams
 		})
 }
